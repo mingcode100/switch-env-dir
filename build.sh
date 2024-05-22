@@ -1,2 +1,2 @@
-rsrc -manifest main.manifest -o main.syso
-go build
+go build main.go
+mv main.exe jvm.exe
