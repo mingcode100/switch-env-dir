@@ -12,9 +12,9 @@ var basePath = "C:\\Users\\liuyu\\tools\\Java"
 
 func UseJDK(jdkVersion string) {
 	mp := findFile()
-	for k, v := range mp {
-		fmt.Println("k:", k, "v:", v)
-	}
+	//for k, v := range mp {
+	//	fmt.Println("k:", k, "v:", v)
+	//}
 	//return
 	v := mp[jdkVersion]
 	//fmt.Println("jdkVersion:", jdkVersion)
