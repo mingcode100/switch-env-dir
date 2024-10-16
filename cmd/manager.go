@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-var basePath = "C:\\Users\\liuyu\\tools\\Java"
+var basePath = "C:\\Users\\lyy\\tools\\Java"
 
 func UseJDK(jdkVersion string) {
 	mp := findFile()

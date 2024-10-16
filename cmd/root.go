@@ -28,17 +28,21 @@ var cmdList = &cobra.Command{
 	},
 }
 
-var jdkVersion string
 var cmdUse = &cobra.Command{
 	Use:   "use",
 	Short: "use jdk",
 	Long:  `use jdk`,
-	Args:  cobra.NoArgs,
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		if jdkVersion == "" {
+		if len(args) == 0 {
 			_ = cmd.Help()
 			os.Exit(0)
 		}
+		if args[0] == "" {
+			_ = cmd.Help()
+			os.Exit(0)
+		}
+		jdkVersion := args[0]
 		UseJDK(jdkVersion)
 	},
 }
@@ -53,8 +57,6 @@ func Execute() {
 }
 
 func init() {
-	cmdUse.Flags().StringVarP(&jdkVersion, "version", "v", "", "jdk version")
-
 	rootCmd.AddCommand(cmdList)
 	rootCmd.AddCommand(cmdUse)
 }
