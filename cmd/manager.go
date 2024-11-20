@@ -4,13 +4,22 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"os/user"
 	"path/filepath"
 	"strings"
 )
 
-var basePath = "C:\\Users\\lyy\\tools\\Java"
+var basePath = ""
 
+func init() {
+	current, err := user.Current()
+	if err != nil {
+		panic(err)
+	}
+	basePath = current.HomeDir + "\\tools\\Java"
+}
 func UseJDK(jdkVersion string) {
+
 	mp := findFile()
 	//for k, v := range mp {
 	//	fmt.Println("k:", k, "v:", v)
@@ -52,9 +61,8 @@ func findFile() map[string]string {
 		if err != nil {
 			return err
 		}
-
 		if !info.IsDir() {
-			if strings.Contains(path, target) {
+			if info.Name() == target {
 				dir := filepath.Dir(path)
 				dd, _ := filepath.Split(dir)
 				cmd := exec.Command(path, "-version")
@@ -63,21 +71,14 @@ func findFile() map[string]string {
 					panic(err)
 				}
 				versionInfo := string(versionOutput)
-				versionInfo = strings.ReplaceAll(versionInfo, "javac", "")
-				versionInfo = strings.TrimSpace(versionInfo)
-				versionInfo = strings.Trim(versionInfo, "\n")
-				versionInfo = strings.Trim(versionInfo, "\r\n")
-
-				split := strings.Split(versionInfo, "\n")
-				var version = ""
-				if len(split) > 1 {
-					version = split[len(split)-1]
-				} else {
-					version = split[0]
-				}
-				version = strings.TrimSpace(version)
+				versionInfo = versionInfo[strings.Index(versionInfo, "javac")+len("javac"):]
+				versionInfo = versionInfo[:strings.Index(versionInfo, "\n")]
+				//fmt.Println("versionInfo:", versionInfo)
+				version := strings.TrimSpace(versionInfo)
+				version = strings.Trim(version, "\r\n")
+				version = strings.Trim(version, "\n")
+				//fmt.Println("version:", version, "dd:", dd)
 				jdkMap[version] = dd
-
 			}
 		}
 
@@ -85,7 +86,7 @@ func findFile() map[string]string {
 	})
 
 	if err != nil {
-		fmt.Println(err)
+		panic(err)
 	}
 	//return jdks
 	return jdkMap
